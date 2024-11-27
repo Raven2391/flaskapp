@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Recipe</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Update Recipe</h1>
+        <form class="update-form" action="{{ url_for('update_recipe', id=recipe.id) }}" method="POST" enctype="multipart/form-data">
+            <div class="form-row">
+                  <label for="recipe_name">Recipe Name:</label>
+                  <input type="text" id="recipe_name" name="recipe_name" value="{{ recipe.name }}" required>
+            </div>
+
+            <div class="form-row">
+                    <label for="category">Category:</label>
+                    <select id="category" name="category">
+                         <option value="Breakfast" {% if recipe.category == 'Breakfast' %}selected{% endif %}>Breakfast</option>
+                        <option value="Lunch" {% if recipe.category == 'Lunch' %}selected{% endif %}>Lunch</option>
+                        <option value="Dinner" {% if recipe.category == 'Dinner' %}selected{% endif %}>Dinner</option>
+                        <option value="Dessert" {% if recipe.category == 'Dessert' %}selected{% endif %}>Dessert</option>
+                    </select>
+            </div>
+            <div class="form-row">
+                <label for="difficulty">Difficulty Level (1-5):</label>
+                <input type="number" id="difficulty" name="difficulty" value="{{ recipe.difficulty }}" min="1" max="5" required>
+            </div>
+            
+            <div class="form-row">
+                <label for="ingredients">Ingredients:</label>
+                <textarea id="ingredients" name="ingredients" rows="4" required>{{ recipe.ingredients }}</textarea>
+            </div>
+            <div class="form-row">
+                <label for="photo">Upload New Photo (optional):</label>
+                <input type="file" id="photo" name="photo">
+                
+            </div>
+            <button class="update-button" type="submit">Update Recipe</button>
+            <a href="/">Back to Home</a>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Recipe Manager</h1>
+        <form action="/" method="post" enctype="multipart/form-data" class="recipe-form">
+            <div class="form-row">
+                <label for="recipe_name">Recipe Name:</label>
+                <input type="text" id="recipe_name" name="recipe_name" required>
+            </div>
+        
+            <div class="form-row">
+                <label for="category">Category:</label>
+                <select id="category" name="category">
+                    <option value="Breakfast">Breakfast</option>
+                    <option value="Lunch">Lunch</option>
+                    <option value="Dinner">Dinner</option>
+                    <option value="Dessert">Dessert</option>
+                </select>
+            </div>
+        
+            <div class="form-row">
+                <label for="difficulty">Difficulty Level (1-5):</label>
+                <input type="number" id="difficulty" name="difficulty" min="1" max="5" required>
+            </div>
+        
+            <div class="form-row">
+                <label for="ingredients">Ingredients:</label>
+                <textarea id="ingredients" name="ingredients" rows="4" required></textarea>
+            </div>
+        
+            <div class="form-row">
+                <label for="photo">Upload Recipe Photo:</label>
+                <input type="file" id="photo" name="photo">
+            </div>
+        
+            <div class="form-row">
+                <button type="submit" class="add-recipe-button">Add Recipe</button>
+            </div>
+            <div class="form-row">
+                <a href="/visualization" class="visualization-link">View Receipe Chart</a>
+            </div>
+            <div class="sort-options">
+                <label for="sort-select" class="sort-label">Sort By:</label>
+                <select id="sort-select" class="button-dropdown" onchange="location = this.value;">
+                    <option value="{{ url_for('index', sort='default') }}" {% if sort_order == 'default' %}selected{% endif %}>Default</option>
+                    <option value="{{ url_for('index', sort='category') }}" {% if sort_order == 'category' %}selected{% endif %}>Category</option>
+                    <option value="{{ url_for('index', sort='difficulty') }}" {% if sort_order == 'difficulty' %}selected{% endif %}>Difficulty</option>
+                    <option value="{{ url_for('index', sort='name') }}" {% if sort_order == 'name' %}selected{% endif %}>Name</option>
+                </select>
+            </div>
+            
+        </form>
+    
+        
+
+        <h2>Existing Recipes</h2>
+        <table>
+            <thead>
+                <colgroup>
+                    <col style="width: 15%;"> <!-- Recipe Name -->
+                    <col style="width: 11%;"> <!-- Category -->
+                    <col style="width: 11%;"> <!-- Difficulty -->
+                    <col style="width: 25%;"> <!-- Ingredients -->
+                    <col style="width: 20%;"> <!-- Photo -->
+                    <col style="width: 10%;"> <!-- Actions -->
+                </colgroup>
+                <tr>
+                    <th>Recipe Name</th>
+                    <th>Category</th>
+                    <th>Difficulty</th>
+                    <th>Ingredients</th>
+                    <th>Photo</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for recipe in recipes %}
+                <tr>
+                    <td>{{ recipe.name }}</td>
+                    <td>{{ recipe.category }}</td>
+                    <td>{{ recipe.difficulty }}</td>
+                    <td>{{ recipe.ingredients }}</td>
+                    <td>
+                        
+                        {% if recipe.photo_filename %}
+                        <a href="{{ url_for('static', filename='uploads/' + recipe.photo_filename) }}" target="_blank">
+                             <img src="{{ url_for('static', filename='uploads/' + recipe.photo_filename) }}" alt="Recipe Photo" height="50">
+                        </a>
+                        {% else %}
+                        No photo
+                        {% endif %}
+                        
+                    </td>
+                    
+                    <td>
+                        <a href="{{ url_for('update_recipe', id=recipe.id) }}">Update</a>
+                        <a href="/delete/{{ recipe.id }}">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
+
+
